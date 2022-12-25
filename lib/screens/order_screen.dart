@@ -3,8 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../providers/orders.dart' show Orders;
 import '../widgets/order_item.dart';
+import '../widgets/app_drawer.dart';
 
 class OrderScreen extends StatelessWidget {
+  static final routeName="./ordersScreen";
+
   @override
   Widget build(BuildContext context) {
     final ordersObj = Provider.of<Orders>(context);
@@ -18,6 +21,7 @@ class OrderScreen extends StatelessWidget {
           return OrderItem(order: ordersObj.orders[i]);
         },
       ),
+      drawer: AppDrawer(),
     );
   }
 }

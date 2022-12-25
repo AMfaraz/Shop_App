@@ -55,6 +55,18 @@ class CartItem extends StatelessWidget {
           ),
         ),
       ),
+      confirmDismiss: (direction) {
+        return showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: Text("Are you sure"),
+                  content: Text("Do you want to remove the item from the cart"),
+                  actions: <Widget>[
+                    TextButton(onPressed: () {Navigator.of(context).pop(false);}, child: Text("No")),
+                    TextButton(onPressed: () {Navigator.of(context).pop(true);}, child: Text("Yes"))
+                  ],
+                ));
+      },
     );
   }
 }
