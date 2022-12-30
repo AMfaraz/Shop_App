@@ -13,7 +13,7 @@ class UserProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context);
     return Scaffold(
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       appBar: AppBar(
         title: const Text("Yours Products"),
         actions: <Widget>[
@@ -29,10 +29,11 @@ class UserProductsScreen extends StatelessWidget {
             return Column(
               children: [
                 UserProductsItem(
+                    id: productsData.items[i].id!,
                     title: productsData.items[i].title!,
                     imgUrl: productsData.items[i].imgurl!
                 ),
-                Divider(),
+                const Divider(),
               ],
             );
           },
