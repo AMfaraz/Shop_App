@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'product.dart';
+import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
   List<Product> _items = [
@@ -61,17 +64,43 @@ class Products with ChangeNotifier {
     return _items.where((prod) => prod.isFavourite == true).toList();
   }
 
-  void addProduct(Product product) {
-    final newProduct = Product(
-        id: DateTime.now().toString(),
+  Future<void> addProduct(Product product) {
+    var url = Uri.parse(
+        "https://shop-app-22862-default-rtdb.asia-southeast1.firebasedatabase.app/products.json");
+    // var url=Uri.https("https://console.firebase.google.com/u/0/project/shop-app-22862/database/shop-app-22862-default-rtdb/data/~2Fauthority", "/products.json");
+    return http
+        .post(url,
+            body: json.encode({
+              "title": product.title,
+              "description": product.description,
+              "imgUrl": product.imgurl,
+              "price": product.price,
+              "isFavourite": product.isFavourite,
+            }))
+        .then((response) {
+      final newProduct = Product(
+        id: json.decode(response.body)["name"],
         description: product.description,
         title: product.title,
         imgurl: product.imgurl,
-        price: product.price);
+        price: product.price,
+      );
+      _items.insert(0, newProduct);
+      notifyListeners();
 
-    _items.insert(0, newProduct);
+    });
 
-    notifyListeners();
+    // final newProduct = Product(
+    //     id: DateTime.now().toString(),
+    //     description: product.description,
+    //     title: product.title,
+    //     imgurl: product.imgurl,
+    //     price: product.price,);
+
+    // _items.insert(0, newProduct);
+
+    // notifyListeners();
+    // return Future.value();
   }
 
   Product findById(String id) {
@@ -89,8 +118,8 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id){
-    _items.removeWhere((prod) => prod.id==id);
+  void deleteProduct(String id) {
+    _items.removeWhere((prod) => prod.id == id);
 
     notifyListeners();
   }
