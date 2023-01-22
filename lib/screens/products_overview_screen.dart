@@ -21,6 +21,23 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showOnlyFavourites = false;
+  var _isinit = true;
+  var _isloading = false;
+
+  @override
+  void didChangeDependencies() {
+      if (_isinit) {
+        setState(() {
+          _isloading=true;
+        });
+        Provider.of<Products>(context).fetchProducts().then((_){
+          setState(() {
+            _isloading=false;
+          });
+        });
+      }
+      _isinit=false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +71,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             },
           ),
           Consumer<Cart>(
-            builder: (ctx, cartData, ch) =>
-                Badge(child: ch!, value: cartData.itemCount.toString(), color: Colors.red,),
+            builder: (ctx, cartData, ch) => Badge(
+              child: ch!,
+              value: cartData.itemCount.toString(),
+              color: Colors.red,
+            ),
             child: IconButton(
               icon: const Icon(
                 Icons.shopping_cart,
@@ -67,7 +87,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ),
         ],
       ),
-      body: ProductsGrid(onlyFavourites: _showOnlyFavourites),
+      body: _isloading
+          ? const Center(child: CircularProgressIndicator())
+          : ProductsGrid(onlyFavourites: _showOnlyFavourites),
       drawer: AppDrawer(),
     );
   }
