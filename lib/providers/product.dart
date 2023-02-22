@@ -21,13 +21,13 @@ class Product with ChangeNotifier{
       required this.price,
       this.isFavourite=false});
 
-  void toggleFavouriteStatus() async {
+  void toggleFavouriteStatus(String authToken) async {
     final oldStatus=isFavourite;
     isFavourite=!isFavourite!;
     notifyListeners();
 
     var url = Uri.parse(
-        "https://shop-app-22862-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json");
+        "https://shoping-f8ede-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken");
 
     try {
       final response=await http.patch(url,body: json.encode({

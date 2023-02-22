@@ -54,6 +54,10 @@ class Products with ChangeNotifier {
   //
   // }
 
+  final String? authToken;
+
+  Products(this.authToken,this._items);
+
   List<Product> get items {
     // if(showFavouriteOnly){
     //   return _items.where((pro) => pro.isFavourite==true).toList();
@@ -67,8 +71,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    var url = Uri.parse(
-        "https://shop-app-22862-default-rtdb.asia-southeast1.firebasedatabase.app/products.json");
+    final url = Uri.parse(
+        "https://shoping-f8ede-default-rtdb.firebaseio.com/products.json?auth=$authToken");
     // var url=Uri.https("https://console.firebase.google.com/u/0/project/shop-app-22862/database/shop-app-22862-default-rtdb/data/~2Fauthority", "/products.json");
     try {
       final response = await http.post(url,
@@ -131,7 +135,7 @@ class Products with ChangeNotifier {
 
     if (index >= 0) {
       var url = Uri.parse(
-          "https://shop-app-22862-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json");
+          "https://shoping-f8ede-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken");
       await http.patch(url,
           body: json.encode({
             "title": newProduct.title,
@@ -149,7 +153,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     var url = Uri.parse(
-        "https://shop-app-22862-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json");
+        "https://shoping-f8ede-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken");
 
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     Product? existingProduct = _items[existingProductIndex];
@@ -167,8 +171,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    var url = Uri.parse(
-        "https://shop-app-22862-default-rtdb.asia-southeast1.firebasedatabase.app/products.json");
+    final url = Uri.parse(
+        "https://shoping-f8ede-default-rtdb.firebaseio.com/products.json?auth=$authToken");
     try {
       final response = await http.get(url);
       final List<Product> loadedProducts = [];
